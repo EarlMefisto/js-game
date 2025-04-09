@@ -1,8 +1,9 @@
-import { GameStatuses } from "./game-statuses";
+import { GameStatuses, GridSize } from "./types/types";
 
 export class Game {
   #status = GameStatuses.settings;
   #googlePosition = null;
+  #player1Position = null;
   #numberUtility; // = new ShogunNumberUtility()
 
   constructor(somethingSimilarToNumberUtility) {
@@ -10,10 +11,7 @@ export class Game {
   }
 
   #settings = {
-    gridSize: {
-      columnsCount: 4,
-      rowsCount: 4,
-    },
+    GridSize: new GridSize(4, 4),
     googleJumpInterval: 1000,
   };
 
@@ -43,7 +41,9 @@ export class Game {
       throw new Error("Game must be Setting before Start");
     }
     this.#status = GameStatuses.inProgress;
+
     this.#makeGoogleJump();
+    this.#placePlayer1ToGrid();
 
     setInterval(() => {
       this.#makeGoogleJump();
@@ -54,11 +54,11 @@ export class Game {
     const newPosition = {
       x: this.#numberUtility.getRandomIntegerNumber(
         0,
-        this.#settings.gridSize.columnsCount
+        this.#settings.GridSize.columnsCount
       ),
       y: this.#numberUtility.getRandomIntegerNumber(
         0,
-        this.#settings.gridSize.rowsCount
+        this.#settings.GridSize.rowsCount
       ),
     };
     if (
@@ -71,13 +71,40 @@ export class Game {
     this.#googlePosition = newPosition;
   }
 
+  #placePlayer1ToGrid() {
+    const newPosition = {
+      x: this.#numberUtility.getRandomIntegerNumber(
+        2,
+        this.#settings.GridSize.columnsCount
+      ),
+      y: this.#numberUtility.getRandomIntegerNumber(
+        2,
+        this.#settings.GridSize.rowsCount
+      ),
+    };
+    this.#player1Position = newPosition;
+  }
+
   get status() {
     return this.#status;
   }
   get googlePosition() {
     return this.#googlePosition;
   }
+  get player1Position() {
+    return this.#player1Position;
+  }
   get gridSize() {
-    return this.#settings.gridSize;
+    return this.#settings.GridSize;
+  }
+
+  //JSDoc
+  /**
+   * Set the grid size for the game
+   * @param {GridSize} value - The new grid size to set
+   */
+
+  set gridSize(value) {
+    return (this.#settings.GridSize = value);
   }
 }

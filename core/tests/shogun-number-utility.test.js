@@ -1,4 +1,4 @@
-import { ShogunNumberUtility } from "./shogun-number-utility";
+import { ShogunNumberUtility } from "../shogun-number-utility";
 
 describe("ShogunNumberUtility", () => {
   const utility = new ShogunNumberUtility();
